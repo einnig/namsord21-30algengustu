@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Námsorð: 21 - 30 algengustu.</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            background-color: #f0f4f8; 
+            margin: 0;
+            padding: 2vh 5vw; 
+            min-height: 95vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .container { 
+            width: 100%; 
+            max-width: 1200px; 
+            background: white; 
+            padding: 30px 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            max-height: 100%;
+            overflow-y: auto;
+        }
+        h1 {
+            color: #1a73e8;
+            font-size: 2em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        /* Framvindustika */
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            height: 20px;
+        }
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #34a853;
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        #counter { font-size: 1.2em; color: #666; font-weight: bold; margin-bottom: 10px; }
+
+        .lang-selector {
+            margin-bottom: 20px;
+            background: #fff3e0;
+            padding: 10px 15px;
+            border-radius: 10px;
+            display: inline-block;
+            border: 1px solid #ffcc80;
+        }
+
+        .lang-selector select {
+            padding: 8px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            margin-left: 10px;
+            max-width: 300px;
+        }
+        
+        #target { 
+            font-size: 4em; 
+            margin: 10px 0; 
+            color: #222; 
+            font-weight: bold;
+        }
+        
+        #is-explanation {
+            font-size: 1.2em;
+            color: #333;
+            background-color: #e8f0fe;
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
+            max-width: 85%;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .btn { 
+            padding: 12px 25px; 
+            font-size: 1.2em; 
+            margin: 5px; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 8px; 
+            background-color: #1a73e8; 
+            color: white; 
+            transition: 0.3s; 
+            font-weight: bold;
+        }
+        .btn:hover:not(:disabled) { background-color: #1557b0; transform: scale(1.02); }
+        .recording { background-color: #d93025; animation: pulse 1.5s infinite; }
+        .recording:hover { background-color: #b3140b; }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        #media-box { 
+            font-size: 1.1em; 
+            color: #444; 
+            text-align: left; 
+            background: #f8fbff; 
+            padding: 15px 30px; 
+            border-radius: 12px; 
+            line-height: 1.6; 
+            border-left: 6px solid #1a73e8; 
+            margin-top: 15px;
+            display: inline-block;
+            min-width: 75%;
+        }
+        #spoken {
+            margin-top: 15px; 
+            font-size: 1.4em;
+            font-style: italic; 
+            color: #555;
+        }
+        #result {
+            font-weight: bold; 
+            font-size: 1.8em; 
+            margin-top: 5px; 
+            color: #1a73e8;
+        }
+        .nav-btns { margin-top: 20px; }
+        
+        /* Fyrir nafnainnslátt */
+        #studentName {
+            font-size: 1.5em;
+            padding: 10px;
+            margin: 20px 0;
+            width: 80%;
+            max-width: 400px;
+            border: 2px solid #1a73e8;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .feedback-note {
+            margin-top: 40px;
+            font-size: 0.95em;
+            color: #555;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .feedback-note a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .feedback-note a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <h1>Námsorð: 21 - 30 algengustu.</h1>
+    
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <div class="lang-selector">
+        <label for="languageSelect"><b>🌍 Veldu tungumál:</b></label>
+        <select id="languageSelect" onchange="updateUI()">
+            <option value="ar">Arabíska – العربية</option>
+            <option value="da">Danska – Dansk</option>
+            <option value="en" selected>Enska – English</option>
+            <option value="tl">Filippseyska – Tagalog / Filipino</option>
+            <option value="fr">Franska – Français</option>
+            <option value="zh">Kínverska – 中文</option>
+            <option value="lv">Lettneska – Latviešu</option>
+            <option value="lt">Litháíska – Lietuvių</option>
+            <option value="no">Norska – Norsk</option>
+            <option value="fa">Persneska – فارسی</option>
+            <option value="pt">Portúgalska – Português</option>
+            <option value="pl">Pólska – Polski</option>
+            <option value="ro">Rúmenska – Română</option>
+            <option value="ru">Rússneska – Русский</option>
+            <option value="es">Spænska – Español</option>
+            <option value="sv">Sænska – Svenska</option>
+            <option value="th">Tælenska – ภาษาไทย</option>
+            <option value="uk">Úkraínska – Українська</option>
+            <option value="vi">Víetnamska – Tiếng Việt</option>
+            <option value="de">Þýska – Deutsch</option>
+        </select>
+    </div>
+
+    <div id="counter"></div>
+    
+    <div id="target"></div>
+    <div id="is-explanation"></div>
+    <br>
+    <button id="record-btn" class="btn" onclick="toggleRecord()">🎤 Tala</button>
+    
+    <div id="spoken"></div>
+    <div id="result"></div>
+
+    <div id="media-box"></div>
+
+    <div class="nav-btns">
+        <button class="btn" style="background-color: #5f6368;" onclick="prevExercise()">⬅️ Fyrri</button>
+        <button class="btn" style="background-color: #5f6368;" onclick="nextExercise()">Næsta ➡️</button>
+    </div>
+
+    <div class="feedback-note">
+        Vinsamlegast sendið ábendingar á <a href="mailto:dgu@fb.is">dgu@fb.is</a>
+    </div>
+</div>
+
+<script>
+const exerciseData = [
+    { 
+        text: "er", 
+        is_exp: "<b>Útskýring:</b> Oftast er þetta <i>sagnorð</i> (nútíð af „að vera“). Það getur líka verið <i>atviksorð eða tengiorð</i> og þýðir þá „þegar“ eða „sem“. (Bókstafur: a).<br><br><b>Samheiti:</b> vera, þegar, sem.<br><br><b>1. Merking (Sagnorð/vera):</b> Hann <b>er</b> glaður.<br><b>2. Merking (Atviksorð/þegar):</b> Ég var úti, <b>er</b> rigningin byrjaði.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> غالباً ما يكون فعلاً (يكون). ويمكن أن يكون ظرفاً أو رابطاً (عندما).<br><br><b>مرادف:</b> يكون، عندما، الذي.<br><br><b>1. المعنى (فعل):</b> هو <b>يكون</b> سعيداً.<br><b>2. المعنى (عندما):</b> كنت بالخارج <b>عندما</b> بدأ المطر.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Oftest et udsagnsord (at være). Kan også være et biord eller bindeord (da/når).<br><br><b>Synonym:</b> være, da, når.<br><br><b>1. Betydning (Udsagnsord/er):</b> Han <b>er</b> glad.<br><b>2. Betydning (Bindeord/da):</b> Jeg var ude, <b>da</b> regnen begyndte.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> Most often a verb (is/am/are). It can also be an adverb or conjunction meaning 'when' or 'as'.<br><br><b>Synonym:</b> to be, when, as.<br><br><b>1. Meaning (Verb/is):</b> He <b>is</b> happy.<br><b>2. Meaning (Conjunction/when):</b> I was outside <b>when</b> the rain started.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Kadalasang pandiwa (ay). Maaari rin itong pang-abay o pangatnig na nangangahulugang 'nang' o 'kailan'.<br><br><b>Kasingkahulugan:</b> ay, nang, kapag.<br><br><b>1. Kahulugan (Pandiwa):</b> Siya <b>ay</b> masaya.<br><b>2. Kahulugan (Nang):</b> Nasa labas ako <b>nang</b> magsimula ang ulan.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Le plus souvent un verbe (être). Peut aussi être un adverbe ou une conjonction (quand/lorsque).<br><br><b>Synonyme:</b> être, quand, lorsque.<br><br><b>1. Sens (Verbe/est):</b> Il <b>est</b> heureux.<br><b>2. Sens (Conjonction/quand):</b> J'étais dehors <b>quand</b> la pluie a commencé.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 通常是动词（是/在）。也可以是副词或连词（当……的时候）。<br><br><b>同义词：</b> 是，当，那。<br><br><b>1. 含义 (动词/是):</b> 他<b>是</b>快乐的。<br><b>2. 含义 (连词/当):</b> <b>当</b>雨开始下的时候，我在外面。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Visbiežāk darbības vārds (būt). Tas var būt arī apstākļa vārds vai saiklis (kad/kā).<br><br><b>Sinonīms:</b> būt, kad.<br><br><b>1. Nozīme (Darbības vārds/ir):</b> Viņš <b>ir</b> priecīgs.<br><b>2. Nozīme (Saiklis/kad):</b> Es biju ārā, <b>kad</b> sākās lietus.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Dažniausiai veiksmažodis (būti). Tai taip pat gali būti prievezmis ar jungtukas (kai).<br><br><b>Sinonimas:</b> būti, kai.<br><br><b>1. Reikšmė (Veiksmažodis/yra):</b> Jis <b>yra</b> laimingas.<br><b>2. Reikšmė (Jungtukas/kai):</b> Aš buvau lauke, <b>kai</b> prasidėjo lietus.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Oftest et verb (å være). Kan også være et adverb eller en konjunksjon (da/når).<br><br><b>Synonym:</b> være, da, når.<br><br><b>1. Betydning (Verb/er):</b> Han <b>er</b> glad.<br><b>2. Betydning (Konjunksjon/da):</b> Jeg var ute <b>da</b> regnet begynte.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> اغلب فعل (است) است. همچنین می‌تواند قید یا حرف ربط (وقتی که) باشد.<br><br><b>مترادف:</b> بودن، وقتی که، که.<br><br><b>1. معنی (فعل):</b> او خوشحال <b>است</b>.<br><b>2. معنی (حرف ربط/وقتی که):</b> من بیرون بودم، <b>وقتی که</b> باران شروع شد.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Mais frequentemente um verbo (ser/estar). Também pode ser um advérbio ou conjunção (quando/como).<br><br><b>Sinônimo:</b> ser, quando, que.<br><br><b>1. Significado (Verbo/é):</b> Ele <b>é</b> feliz.<br><b>2. Significado (Conjunção/quando):</b> Eu estava lá fora <b>quando</b> a chuva começou.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Najczęściej czasownik (być). Może też być przysłówkiem lub spójnikiem (kiedy/gdy).<br><br><b>Synonim:</b> być, kiedy, gdy.<br><br><b>1. Znaczenie (Czasownik/jest):</b> On <b>jest</b> szczęśliwy.<br><b>2. Znaczenie (Spójnik/gdy):</b> Byłem na zewnątrz, <b>gdy</b> zaczął padać deszcz.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Cel mai adesea un verb (a fi). Poate fi, de asemenea, un adverb sau conjuncție (când).<br><br><b>Sinonim:</b> a fi, când.<br><br><b>1. Sens (Verb/este):</b> El <b>este</b> fericit.<br><b>2. Sens (Conjuncție/când):</b> Eram afară <b>când</b> a început ploaia.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Чаще всего глагол (быть). Также может быть наречием или союзом (когда).<br><br><b>Синоним:</b> быть, когда.<br><br><b>1. Значение (Глагол):</b> Он (<b>есть</b>) счастлив.<br><b>2. Значение (Союз/когда):</b> Я был на улице, <b>когда</b> начался дождь.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Más a menudo un verbo (ser/estar). También puede ser un adverbio o conjunción (cuando).<br><br><b>Sinónimo:</b> ser, cuando, que.<br><br><b>1. Significado (Verbo/es):</b> Él <b>es</b> feliz.<br><b>2. Significado (Conjunción/cuando):</b> Estaba afuera <b>cuando</b> empezó la lluvia.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Oftast ett verb (att vara). Kan också vara ett adverb eller konjunktion (när/då).<br><br><b>Synonym:</b> vara, då, när.<br><br><b>1. Betydelse (Verb/är):</b> Han <b>är</b> glad.<br><b>2. Betydelse (Konjunktion/när):</b> Jag var ute <b>när</b> regnet började.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> มักจะเป็นคำกริยา (เป็น/อยู่/คือ) หรืออาจเป็นกริยาวิเศษณ์/คำสันธาน (เมื่อ)<br><br><b>คำพ้องความหมาย:</b> เป็น, เมื่อ, ขณะที่<br><br><b>1. ความหมาย (กริยา/เป็น):</b> เขา<b>เป็น</b>คนมีความสุข<br><b>2. ความหมาย (สันธาน/เมื่อ):</b> ฉันอยู่ข้างนอก<b>เมื่อ</b>ฝนเริ่มตก",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Найчастіше дієслово (бути). Також може бути прислівником або сполучником (коли).<br><br><b>Синонім:</b> бути, коли.<br><br><b>1. Значення (Дієслово/є):</b> Він (<b>є</b>) щасливий.<br><b>2. Значення (Сполучник/коли):</b> Я був на вулиці, <b>коли</b> почався дощ.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Thường là động từ (thì/là/ở). Nó cũng có thể là trạng từ hoặc liên từ (khi).<br><br><b>Từ đồng nghĩa:</b> là, khi, lúc.<br><br><b>1. Nghĩa (Động từ/là):</b> Anh ấy <b>thì</b> hạnh phúc.<br><b>2. Nghĩa (Liên từ/khi):</b> Tôi đang ở ngoài <b>khi</b> trời bắt đầu mưa.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Meistens ein Verb (sein). Kann auch ein Adverb oder eine Konjunktion sein (als/wenn).<br><br><b>Synonym:</b> sein, als, wenn.<br><br><b>1. Bedeutung (Verb/ist):</b> Er <b>ist</b> glücklich.<br><b>2. Bedeutung (Konjunktion/als):</b> Ich war draußen, <b>als</b> der Regen begann."
+        }
+    },
+    { 
+        text: "þjóð", 
+        is_exp: "<b>Útskýring:</b> <i>Nafnorð (kvenkyn).</i> Hópur fólks sem á sér sameiginlegt tungumál, menningu eða land. (Bókstafur: s = substantiv/nafnorð).<br><br><b>Samheiti:</b> fólk, landsmenn.<br><br><b>Dæmi:</b> Íslendingar eru lítil <b>þjóð</b>.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> اسم (مؤنث) يطلق على مجموعة من الناس يشتركون في لغة أو ثقافة أو بلد.<br><br><b>مرادف:</b> شعب، أمة.<br><br><b>مثال:</b> الآيسلنديون <b>أمة (شعب)</b> صغيرة.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Navneord (hunkøn). En gruppe mennesker, der deler sprog, kultur eller land.<br><br><b>Synonym:</b> folk, nation.<br><br><b>Eksempel:</b> Islændinge er en lille <b>nation (folk)</b>.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> A noun (feminine) for a group of people who share the same language, culture or country (nation).<br><br><b>Synonym:</b> people, nation.<br><br><b>Example:</b> Icelanders are a small <b>nation</b>.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Pangngalan. Grupo ng mga tao na may iisang wika, kultura o bansa (bansa/nasyon).<br><br><b>Kasingkahulugan:</b> bansa, nasyon, mamamayan.<br><br><b>Halimbawa:</b> Ang mga Icelander ay isang maliit na <b>nasyon</b>.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Nom (féminin). Un groupe de personnes qui partagent une langue, une culture ou un pays.<br><br><b>Synonyme:</b> peuple, nation.<br><br><b>Exemple:</b> Les Islandais sont une petite <b>nation</b>.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 名词。指拥有共同语言、文化或国家的一群人（民族/国家）。<br><br><b>同义词：</b> 民族，人民，国家。<br><br><b>例句:</b> 冰岛人是一个小<b>民族（国家）</b>。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Lietvārds. Cilvēku grupa, kam ir kopīga valoda, kultūra vai valsts.<br><br><b>Sinonīms:</b> tauta, nācija.<br><br><b>Piemērs:</b> Islandieši ir maza <b>tauta</b>.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Daiktavardis. Žmonių grupė, turinti bendrą kalbą, kultūrą ar šalį.<br><br><b>Sinonimas:</b> tauta, nacija.<br><br><b>Pavyzdys:</b> Islandai yra maža <b>tauta</b>.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Substantiv. En gruppe mennesker som deler språk, kultur eller land.<br><br><b>Synonym:</b> folk, nasjon.<br><br><b>Eksempel:</b> Islendinger er en liten <b>nasjon</b>.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> اسم. گروهی از مردم که دارای زبان، فرهنگ یا کشور مشترک هستند (ملت).<br><br><b>مترادف:</b> مردم، ملت.<br><br><b>مثال:</b> ایسلندی‌ها <b>ملت</b> کوچکی هستند.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Substantivo. Um grupo de pessoas que partilham a mesma língua, cultura ou país.<br><br><b>Sinônimo:</b> povo, nação.<br><br><b>Exemplo:</b> Os islandeses são uma pequena <b>nação</b>.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Rzeczownik. Grupa ludzi dzieląca ten sam język, kulturę lub kraj (naród).<br><br><b>Synonim:</b> ludzie, naród.<br><br><b>Przykład:</b> Islandczycy to mały <b>naród</b>.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Substantiv. Un grup de oameni care au în comun o limbă, o cultură sau o țară (națiune).<br><br><b>Sinonim:</b> popor, națiune.<br><br><b>Exemplu:</b> Islandezii sunt o <b>națiune</b> mică.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Существительное. Группа людей, объединенных общим языком, культурой или страной (нация).<br><br><b>Синоним:</b> народ, нация.<br><br><b>Пример:</b> Исландцы — маленькая <b>нация</b>.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Sustantivo. Un grupo de personas que comparten el mismo idioma, cultura o país (nación).<br><br><b>Sinónimo:</b> pueblo, nación.<br><br><b>Ejemplo:</b> Los islandeses son una pequeña <b>nación</b>.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Substantiv. En grupp människor som delar språk, kultur eller land.<br><br><b>Synonym:</b> folk, nation.<br><br><b>Exempel:</b> Islänningar är en liten <b>nation</b>.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> คำนาม หมายถึงกลุ่มคนที่มีภาษา วัฒนธรรม หรือประเทศร่วมกัน (ชาติ)<br><br><b>คำพ้องความหมาย:</b> ผู้คน, ประชาชาติ<br><br><b>ตัวอย่าง:</b> ชาวไอซ์แลนด์เป็น<b>ชนชาติ</b>เล็กๆ",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Іменник. Група людей, об'єднана спільною мовою, культурою або країною (нація).<br><br><b>Синонім:</b> народ, нація.<br><br><b>Приклад:</b> Ісландці — маленька <b>нація</b>.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Danh từ. Một nhóm người có chung ngôn ngữ, văn hóa hoặc đất nước (dân tộc).<br><br><b>Từ đồng nghĩa:</b> nhân dân, dân tộc.<br><br><b>Ví dụ:</b> Người Iceland là một <b>dân tộc</b> nhỏ.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Ein Nomen. Eine Gruppe von Menschen, die dieselbe Sprache, Kultur oder dasselbe Land teilen (Nation).<br><br><b>Synonym:</b> Volk, Nation.<br><br><b>Beispiel:</b> Isländer sind eine kleine <b>Nation</b>."
+        }
+    },
+    { 
+        text: "aðili", 
+        is_exp: "<b>Útskýring:</b> <i>Nafnorð (karlkyn).</i> Oftast notað í formlegu máli yfir manneskju, hóp eða fyrirtæki sem tekur þátt í einhverju (t.d. í samningi eða máli). (Bókstafur: c = algengt/samnafn).<br><br><b>Samheiti:</b> þátttakandi, einstaklingur, persóna.<br><br><b>Dæmi:</b> Hann er mikilvægur <b>aðili</b> í þessu máli.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> اسم (مذكر) يستخدم في اللغة الرسمية للدلالة على شخص، مجموعة أو شركة تشارك في أمر ما (طرف).<br><br><b>مرادف:</b> مشارك، طرف، فرد.<br><br><b>مثال:</b> هو <b>طرف (شخص)</b> مهم في هذه القضية.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Navneord. Brugt formelt om en person, gruppe eller virksomhed involveret i noget (en part).<br><br><b>Synonym:</b> part, person, deltager.<br><br><b>Eksempel:</b> Han er en vigtig <b>part (person)</b> i denne sag.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> A noun used in formal language for a person, group or company involved in something (party/participant).<br><br><b>Synonym:</b> party, participant, individual.<br><br><b>Example:</b> He is an important <b>party/person</b> in this matter.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Pangngalan na ginagamit sa pormal na wika para sa isang tao o kumpanya na kasangkot sa isang bagay.<br><br><b>Kasingkahulugan:</b> partido, kalahok, indibidwal.<br><br><b>Halimbawa:</b> Siya ay isang mahalagang <b>partido/tao</b> sa usaping ito.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Nom utilisé dans un langage formel pour une personne, un groupe ou une entreprise impliquée dans quelque chose (partie/intervenant).<br><br><b>Synonyme:</b> partie, participant, individu.<br><br><b>Exemple:</b> Il est une <b>partie (personne)</b> importante dans cette affaire.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 名词。在正式用语中指参与某事的个人、团体或公司（当事人/相关方）。<br><br><b>同义词：</b> 参与者，当事人，个人。<br><br><b>例句:</b> 他是这件事中的重要<b>相关方（人物）</b>。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Lietvārds, ko formālā valodā lieto, apzīmējot personu, grupu vai uzņēmumu, kas ir iesaistīts kaut kādā lietā (puse).<br><br><b>Sinonīms:</b> puse, dalībnieks, persona.<br><br><b>Piemērs:</b> Viņš ir svarīga <b>puse (persona)</b> šajā lietā.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Daiktavardis, formaliame kontekste reiškiantis asmenį, grupę ar įmonę, dalyvaujančią kažkame (šalis/dalyvis).<br><br><b>Sinonimas:</b> šalis, dalyvis, asmuo.<br><br><b>Pavyzdys:</b> Jis yra svarbus <b>asmuo (šalis)</b> šioje byloje.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Substantiv brukt formelt om en person, gruppe eller bedrift som er involvert i noe (en part).<br><br><b>Synonym:</b> part, person, deltaker.<br><br><b>Eksempel:</b> Han er en viktig <b>part (person)</b> i denne saken.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> اسم. در زبان رسمی برای شخص، گروه یا شرکتی که درگیر چیزی است استفاده می‌شود (طرف).<br><br><b>مترادف:</b> طرف، شرکت‌کننده، فرد.<br><br><b>مثال:</b> او یک <b>طرف (شخص)</b> مهم در این موضوع است.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Substantivo usado em linguagem formal para uma pessoa, grupo ou empresa envolvida em algo (parte/participante).<br><br><b>Sinônimo:</b> parte, participante, indivíduo.<br><br><b>Exemplo:</b> Ele é uma <b>parte (pessoa)</b> importante neste assunto.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Rzeczownik używany w języku formalnym dla osoby, grupy lub firmy zaangażowanej w coś (strona/uczestnik).<br><br><b>Synonim:</b> strona, uczestnik, osoba.<br><br><b>Przykład:</b> On jest ważną <b>stroną (osobą)</b> w tej sprawie.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Substantiv folosit în limbajul formal pentru o persoană, grup sau companie implicată în ceva (parte/participant).<br><br><b>Sinonim:</b> parte, participant, persoană.<br><br><b>Exemplu:</b> El este o <b>parte (persoană)</b> importantă în această problemă.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Существительное, используемое в официальной речи для лица, группы или компании, участвующей в чем-либо (сторона/участник).<br><br><b>Синоним:</b> сторона, участник, лицо.<br><br><b>Пример:</b> Он является важным <b>лицом (стороной)</b> в этом деле.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Sustantivo usado en lenguaje formal para una persona, grupo o empresa involucrada en algo (parte/participante).<br><br><b>Sinónimo:</b> parte, participante, individuo.<br><br><b>Ejemplo:</b> Él es una <b>parte (persona)</b> importante en este asunto.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Substantiv som används formellt om en person, grupp eller företag som är inblandad i något (part).<br><br><b>Synonym:</b> part, person, deltagare.<br><br><b>Exempel:</b> Han är en viktig <b>part (person)</b> i det här ärendet.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> คำนามที่ใช้ในภาษาทางการสำหรับบุคคล กลุ่ม หรือบริษัทที่เกี่ยวข้องกับบางสิ่ง (ฝ่าย/ผู้มีส่วนร่วม)<br><br><b>คำพ้องความหมาย:</b> ฝ่าย, ผู้เข้าร่วม, บุคคล<br><br><b>ตัวอย่าง:</b> เขาเป็น<b>บุคคล (ฝ่าย)</b> ที่สำคัญในเรื่องนี้",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Іменник, що використовується в офіційній мові для особи, групи або компанії, яка бере участь у чомусь (сторона/учасник).<br><br><b>Синонім:</b> сторона, учасник, особа.<br><br><b>Приклад:</b> Він є важливою <b>особою (стороною)</b> у цій справі.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Một danh từ được dùng trong ngôn ngữ trang trọng cho một người, một nhóm hoặc công ty có liên quan đến việc gì đó (bên liên quan).<br><br><b>Từ đồng nghĩa:</b> bên tham gia, người tham gia, cá nhân.<br><br><b>Ví dụ:</b> Anh ấy là một <b>bên (nhân vật)</b> quan trọng trong vấn đề này.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Ein Nomen, das in formeller Sprache für eine Person, Gruppe oder Firma verwendet wird, die in etwas verwickelt ist (Partei/Beteiligter).<br><br><b>Synonym:</b> Partei, Teilnehmer, Person.<br><br><b>Beispiel:</b> Er ist eine wichtige <b>Partei (Person)</b> in dieser Angelegenheit."
+        }
+    },
+    { 
+        text: "raun", 
+        is_exp: "<b>Útskýring:</b> <i>Nafnorð (kvenkyn).</i> Getur haft tvær merkingar. Annars vegar veruleiki eða sannleikur (oft sagt „í raun“ eða „í raun og veru“). Hins vegar getur það þýtt erfiðleikar eða prófraun. (Bókstafur: n = nafnorð).<br><br><b>Samheiti:</b> veruleiki, reynd, erfiðleikar.<br><br><b>1. Merking (Veruleiki):</b> Þetta er <b>í raun</b> mjög einfalt.<br><b>2. Merking (Erfiðleikar):</b> Þetta var mikil <b>raun</b> fyrir hana.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> اسم له معنيان: الحقيقة/الواقع (في الواقع)، أو محنة/صعوبة.<br><br><b>مرادف:</b> واقع، حقيقة، محنة.<br><br><b>1. المعنى (الواقع):</b> هذا <b>في الواقع</b> بسيط جداً.<br><b>2. المعنى (صعوبة/محنة):</b> كانت هذه <b>محنة (تجربة صعبة)</b> كبيرة بالنسبة لها.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Navneord med to betydninger: Virkelighed ('i virkeligheden') eller en svær prøvelse/vanskelighed.<br><br><b>Synonym:</b> virkelighed, prøvelse, vanskelighed.<br><br><b>1. Betydning (Virkelighed):</b> Dette er <b>i virkeligheden</b> meget simpelt.<br><b>2. Betydning (Prøvelse):</b> Det var en stor <b>prøvelse (udfordring)</b> for hende.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> A noun with two meanings: Reality/truth ('in reality'), or hardship/ordeal.<br><br><b>Synonym:</b> reality, truth, ordeal.<br><br><b>1. Meaning (Reality):</b> This is <b>in reality</b> very simple.<br><b>2. Meaning (Ordeal):</b> This was a great <b>ordeal (hardship)</b> for her.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Pangngalang may dalawang kahulugan: Katotohanan/realidad ('sa katunayan'), o paghihirap/pagsubok.<br><br><b>Kasingkahulugan:</b> katotohanan, realidad, pagsubok.<br><br><b>1. Kahulugan (Realidad):</b> Ito ay <b>sa katunayan</b> napakasimple.<br><b>2. Kahulugan (Pagsubok):</b> Ito ay isang malaking <b>pagsubok</b> para sa kanya.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Nom ayant deux sens : La réalité ('en réalité'), ou une épreuve/difficulté.<br><br><b>Synonyme:</b> réalité, vérité, épreuve.<br><br><b>1. Sens (Réalité):</b> C'est <b>en réalité</b> très simple.<br><b>2. Sens (Épreuve):</b> Ce fut une grande <b>épreuve</b> pour elle.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 具有两种含义的名词：现实/真相（“实际上”），或艰难/考验。<br><br><b>同义词：</b> 现实，真相，考验。<br><br><b>1. 含义 (现实):</b> 这<b>在现实（实际上）</b>中非常简单。<br><b>2. 含义 (磨难):</b> 这对她来说是一个巨大的<b>考验（磨难）</b>。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Lietvārds ar divām nozīmēm: Realitāte ('patiesībā') vai pārbaudījums/grūtības.<br><br><b>Sinonīms:</b> realitāte, patiesība, pārbaudījums.<br><br><b>1. Nozīme (Realitāte):</b> Tas <b>patiesībā</b> ir ļoti vienkārši.<br><b>2. Nozīme (Pārbaudījums):</b> Tas viņai bija liels <b>pārbaudījums</b>.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Daiktavardis, turintis dvi reikšmes: Realybė ('iš tikrųjų') arba išbandymas/sunkumas.<br><br><b>Sinonimas:</b> realybė, tiesa, išbandymas.<br><br><b>1. Reikšmė (Realybė):</b> Tai <b>iš tikrųjų</b> labai paprasta.<br><b>2. Reikšmė (Išbandymas):</b> Jai tai buvo didelis <b>išbandymas</b>.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Substantiv med to betydninger: Virkelighet ('i virkeligheten') eller en prøvelse/motgang.<br><br><b>Synonym:</b> virkelighet, prøvelse, vanskelighet.<br><br><b>1. Betydning (Virkelighet):</b> Dette er <b>i virkeligheten</b> veldig enkelt.<br><b>2. Betydning (Prøvelse):</b> Det var en stor <b>prøvelse</b> for henne.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> اسمی با دو معنی: واقعیت/حقیقت (در واقع)، یا سختی/آزمون.<br><br><b>مترادف:</b> واقعیت، حقیقت، مصیبت.<br><br><b>1. معنی (واقعیت):</b> این <b>در واقع</b> بسیار ساده است.<br><b>2. معنی (آزمون/سختی):</b> این یک <b>آزمون (سختی)</b> بزرگ برای او بود.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Substantivo com dois significados: Realidade/verdade ('na realidade'), ou provação/dificuldade.<br><br><b>Sinônimo:</b> realidade, verdade, provação.<br><br><b>1. Significado (Realidade):</b> Isso é <b>na realidade</b> muito simples.<br><b>2. Significado (Provação):</b> Isso foi uma grande <b>provação</b> para ela.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Rzeczownik o dwóch znaczeniach: Rzeczywistość ('w rzeczywistości') lub trudność/próba.<br><br><b>Synonim:</b> rzeczywistość, prawda, próba.<br><br><b>1. Znaczenie (Rzeczywistość):</b> To jest <b>w rzeczywistości</b> bardzo proste.<br><b>2. Znaczenie (Trudność/Próba):</b> To była dla niej ciężka <b>próba</b>.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Substantiv cu două sensuri: Realitate ('în realitate'), sau încercare/greutate.<br><br><b>Sinonim:</b> realitate, adevăr, încercare.<br><br><b>1. Sens (Realitate):</b> Acest lucru este <b>în realitate</b> foarte simplu.<br><b>2. Sens (Încercare):</b> Aceasta a fost o mare <b>încercare</b> pentru ea.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Существительное с двумя значениями: Реальность ('на самом деле') или испытание/трудность.<br><br><b>Синоним:</b> реальность, правда, испытание.<br><br><b>1. Значение (Реальность):</b> Это <b>на самом деле</b> очень просто.<br><b>2. Значение (Испытание):</b> Это было для нее большим <b>испытанием</b>.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Sustantivo con dos significados: Realidad ('en realidad'), o prueba/dificultad.<br><br><b>Sinónimo:</b> realidad, verdad, prueba.<br><br><b>1. Significado (Realidad):</b> Esto es <b>en realidad</b> muy simple.<br><b>2. Significado (Prueba):</b> Esto fue una gran <b>prueba (dificultad)</b> para ella.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Substantiv med två betydelser: Verklighet ('i själva verket') eller prövning/svårighet.<br><br><b>Synonym:</b> verklighet, prövning, svårighet.<br><br><b>1. Betydelse (Verklighet):</b> Detta är <b>i verkligheten</b> mycket enkelt.<br><b>2. Betydelse (Prövning):</b> Det var en stor <b>prövning</b> för henne.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> คำนามที่มีสองความหมาย: ความเป็นจริง ('ในความเป็นจริง') หรือ ความยากลำบาก/บททดสอบ<br><br><b>คำพ้องความหมาย:</b> ความเป็นจริง, ความจริง, บททดสอบ<br><br><b>1. ความหมาย (ความเป็นจริง):</b> <b>ในความเป็นจริง</b> สิ่งนี้เรียบง่ายมาก<br><b>2. ความหมาย (บททดสอบ):</b> นี่เป็น<b>บททดสอบ (ความยากลำบาก)</b> ครั้งใหญ่สำหรับเธอ",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Іменник із двома значеннями: Реальність ('насправді') або випробування/труднощі.<br><br><b>Синонім:</b> реальність, правда, випробування.<br><br><b>1. Значення (Реальність):</b> Це <b>насправді</b> дуже просто.<br><b>2. Значення (Випробування):</b> Це було для неї великим <b>випробуванням</b>.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Danh từ có hai nghĩa: Thực tế ('trên thực tế'), hoặc thử thách/khó khăn.<br><br><b>Từ đồng nghĩa:</b> thực tế, sự thật, thử thách.<br><br><b>1. Nghĩa (Thực tế):</b> Điều này <b>trên thực tế</b> rất đơn giản.<br><b>2. Nghĩa (Thử thách):</b> Đó là một <b>thử thách (nỗi khổ)</b> lớn đối với cô ấy.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Ein Nomen mit zwei Bedeutungen: Realität ('in Wirklichkeit') oder eine schwere Prüfung/Belastung.<br><br><b>Synonym:</b> Realität, Wahrheit, Prüfung.<br><br><b>1. Bedeutung (Realität):</b> Das ist <b>in Wirklichkeit</b> sehr einfach.<br><b>2. Bedeutung (Prüfung):</b> Das war eine große <b>Prüfung (Belastung)</b> für sie."
+        }
+    },
+    { 
+        text: "nýta", 
+        is_exp: "<b>Útskýring:</b> <i>Sagnorð.</i> Að nota eitthvað þannig að það komi að gagni eða skili árangri. (Bókstafur: a = aðgera/sögn).<br><br><b>Samheiti:</b> nota, hagnýta, brúka.<br><br><b>Dæmi:</b> Við verðum að <b>nýta</b> tímann vel.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> فعل يعني استخدام شيء ما بطريقة مفيدة (الاستفادة من).<br><br><b>مرادف:</b> يستخدم، يستفيد.<br><br><b>مثال (استغلال/استفادة):</b> يجب أن <b>نستغل (نستفيد من)</b> الوقت جيداً.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Udsagnsord. At bruge noget på en gavnlig eller produktiv måde (udnytte).<br><br><b>Synonym:</b> bruge, udnytte.<br><br><b>Eksempel (Udnytte):</b> Vi skal <b>udnytte</b> tiden godt.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> A verb meaning to use something in a beneficial or productive way (utilize).<br><br><b>Synonym:</b> use, utilize.<br><br><b>Example (Utilize):</b> We must <b>utilize</b> the time well.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Pandiwa na nangangahulugang gamitin ang isang bagay sa kapaki-pakinabang na paraan.<br><br><b>Kasingkahulugan:</b> gamitin, pakinabangan.<br><br><b>Halimbawa (Gamitin):</b> Dapat nating <b>pakinabangan (gamitin)</b> nang mabuti ang oras.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Verbe signifiant utiliser quelque chose de manière bénéfique (utiliser/exploiter).<br><br><b>Synonyme:</b> utiliser, exploiter.<br><br><b>Exemple (Utiliser):</b> Nous devons bien <b>utiliser (mettre à profit)</b> le temps.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 动词。指以有益或富有成效的方式使用某物（利用）。<br><br><b>同义词：</b> 使用，利用。<br><br><b>例句 (利用):</b> 我们必须好好<b>利用</b>时间。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Darbības vārds, kas nozīmē izmantot kaut ko noderīgi vai produktīvi.<br><br><b>Sinonīms:</b> izmantot, lietot.<br><br><b>Piemērs (Izmantot):</b> Mums labi <b>jāizmanto</b> laiks.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Veiksmažodis, reiškiantis naudoti kažką naudingai (išnaudoti).<br><br><b>Sinonimas:</b> naudoti, išnaudoti.<br><br><b>Pavyzdys (Išnaudoti):</b> Turime gerai <b>išnaudoti</b> laiką.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Verb. Å bruke noe på en nyttig og god måte (utnytte).<br><br><b>Synonym:</b> bruke, utnytte.<br><br><b>Eksempel (Utnytte):</b> Vi må <b>utnytte</b> tiden godt.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> فعل به معنی استفاده از چیزی به روشی مفید (بهره بردن).<br><br><b>مترادف:</b> استفاده کردن، بهره‌برداری.<br><br><b>مثال (بهره بردن):</b> ما باید از وقت خود به خوبی <b>استفاده کنیم (بهره ببریم)</b>.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Verbo que significa usar algo de maneira benéfica ou produtiva (utilizar).<br><br><b>Sinônimo:</b> usar, utilizar, aproveitar.<br><br><b>Exemplo (Utilizar):</b> Devemos <b>utilizar (aproveitar)</b> bem o tempo.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Czasownik oznaczający użycie czegoś w pożyteczny sposób (wykorzystać).<br><br><b>Synonim:</b> używać, wykorzystywać.<br><br><b>Przykład (Wykorzystać):</b> Musimy dobrze <b>wykorzystać</b> czas.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Verb care înseamnă a folosi ceva într-un mod util (a utiliza/a valorifica).<br><br><b>Sinonim:</b> a folosi, a utiliza.<br><br><b>Exemplu (A utiliza):</b> Trebuie să <b>utilizăm</b> bine timpul.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Глагол, означающий полезное использование чего-либо (использовать с толком).<br><br><b>Синоним:</b> использовать, утилизировать.<br><br><b>Пример (Использовать):</b> Мы должны хорошо <b>использовать (провести)</b> время.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Verbo que significa usar algo de manera beneficiosa o productiva (aprovechar/utilizar).<br><br><b>Sinónimo:</b> usar, utilizar, aprovechar.<br><br><b>Ejemplo (Aprovechar):</b> Debemos <b>aprovechar (utilizar)</b> bien el tiempo.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Verb som betyder att använda något på ett bra och nyttigt sätt (utnyttja).<br><br><b>Synonym:</b> använda, utnyttja.<br><br><b>Exempel (Utnyttja):</b> Vi måste <b>utnyttja</b> tiden väl.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> คำกริยาหมายถึงการใช้บางสิ่งให้เกิดประโยชน์ (ใช้ประโยชน์)<br><br><b>คำพ้องความหมาย:</b> ใช้, ใช้ประโยชน์<br><br><b>ตัวอย่าง (ใช้ประโยชน์):</b> เราต้อง<b>ใช้ประโยชน์</b>จากเวลาให้ดี",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Дієслово, що означає використовувати щось із користю.<br><br><b>Синонім:</b> використовувати, застосовувати.<br><br><b>Приклад (Використовувати):</b> Ми повинні добре <b>використовувати</b> час.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Một động từ có nghĩa là sử dụng một cái gì đó theo cách có lợi hoặc hiệu quả (tận dụng).<br><br><b>Từ đồng nghĩa:</b> sử dụng, tận dụng.<br><br><b>Ví dụ (Tận dụng):</b> Chúng ta phải <b>tận dụng</b> thời gian thật tốt.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Ein Verb, das bedeutet, etwas auf nützliche oder produktive Weise zu verwenden (nutzen).<br><br><b>Synonym:</b> benutzen, nutzen.<br><br><b>Beispiel (Nutzen):</b> Wir müssen die Zeit gut <b>nutzen</b>."
+        }
+    },
+    { 
+        text: "tengsl", 
+        is_exp: "<b>Útskýring:</b> <i>Nafnorð (hvorugkyn, oftast í fleirtölu).</i> Samband á milli tveggja eða fleiri hluta, hugmynda eða manneskja. (Bókstafur: n = nafnorð).<br><br><b>Samheiti:</b> samband, tenging.<br><br><b>Dæmi:</b> Þau hafa mjög góð <b>tengsl</b> sín á milli.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> اسم (غالباً جمع) يعني العلاقة أو الارتباط بين الأشياء أو الأشخاص.<br><br><b>مرادف:</b> علاقة، رابط.<br><br><b>مثال (علاقة):</b> لديهم <b>علاقة (روابط)</b> جيدة جداً بينهم.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Navneord (bruges oftest i flertal). En relation eller forbindelse mellem ting eller mennesker.<br><br><b>Synonym:</b> forbindelse, relation.<br><br><b>Eksempel (Forbindelse):</b> De har en meget god <b>forbindelse/relation</b> mellem sig.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> A noun (usually plural) meaning a relationship or connection between things or people.<br><br><b>Synonym:</b> connection, relationship, link.<br><br><b>Example (Connection/Relationship):</b> They have a very good <b>connection</b> between them.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Pangngalan na nangangahulugang ugnayan o koneksyon sa pagitan ng mga bagay o tao.<br><br><b>Kasingkahulugan:</b> koneksyon, ugnayan.<br><br><b>Halimbawa (Ugnayan):</b> Mayroon silang napakagandang <b>ugnayan (koneksyon)</b> sa isa't isa.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Nom (généralement au pluriel) signifiant une relation ou une connexion entre des choses ou des personnes.<br><br><b>Synonyme:</b> connexion, relation, lien.<br><br><b>Exemple (Lien/Connexion):</b> Ils ont une très bonne <b>connexion (relation)</b> entre eux.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 名词（通常用复数），指事物或人之间的关系或联系。<br><br><b>同义词：</b> 联系，关系。<br><br><b>例句 (联系/关系):</b> 他们之间有很好的<b>联系（关系）</b>。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Lietvārds (parasti daudzskaitlī), kas nozīmē attiecības vai saikni starp lietām vai cilvēkiem.<br><br><b>Sinonīms:</b> saikne, attiecības.<br><br><b>Piemērs (Saikne):</b> Viņu starpā ir ļoti laba <b>saikne (attiecības)</b>.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Daiktavardis (dažniausiai daugiskaita), reiškiantis santykį ar ryšį tarp dalykų ar žmonių.<br><br><b>Sinonimas:</b> ryšys, santykiai.<br><br><b>Pavyzdys (Ryšys):</b> Tarp jų yra labai geras <b>ryšys (santykiai)</b>.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Substantiv (oftest i flertall). Et forhold eller forbindelse mellom ting eller mennesker.<br><br><b>Synonym:</b> forbindelse, relasjon.<br><br><b>Eksempel (Forbindelse):</b> De har en veldig god <b>forbindelse/relasjon</b> seg imellom.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> اسم (معمولاً جمع) به معنی رابطه یا ارتباط بین اشیاء یا افراد.<br><br><b>مترادف:</b> ارتباط، رابطه.<br><br><b>مثال (ارتباط):</b> آن‌ها <b>ارتباط (رابطه)</b> بسیار خوبی با هم دارند.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Substantivo (geralmente plural) que significa um relacionamento ou conexão entre coisas ou pessoas.<br><br><b>Sinônimo:</b> conexão, relacionamento, ligação.<br><br><b>Exemplo (Conexão):</b> Eles têm uma <b>conexão (relacionamento)</b> muito boa entre eles.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Rzeczownik (zazwyczaj w liczbie mnogiej) oznaczający relację lub więź między rzeczami albo ludźmi.<br><br><b>Synonim:</b> połączenie, relacja, więź.<br><br><b>Przykład (Więź/Relacja):</b> Mają bardzo dobre <b>relacje (więzi)</b> między sobą.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Substantiv (de obicei la plural) care înseamnă o relație sau conexiune între lucruri sau persoane.<br><br><b>Sinonim:</b> conexiune, relație, legătură.<br><br><b>Exemplu (Conexiune):</b> Au o <b>conexiune (relație)</b> foarte bună între ei.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Существительное (обычно во мн. числе), означающее отношения или связь между вещами или людьми.<br><br><b>Синоним:</b> связь, отношения.<br><br><b>Пример (Связь):</b> У них очень хорошая <b>связь (отношения)</b> между собой.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Sustantivo (generalmente plural) que significa una relación o conexión entre cosas o personas.<br><br><b>Sinónimo:</b> conexión, relación, enlace.<br><br><b>Ejemplo (Conexión/Relación):</b> Ellos tienen una muy buena <b>conexión (relación)</b> entre sí.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Substantiv (oftast i plural). En relation eller förbindelse mellan saker eller människor.<br><br><b>Synonym:</b> förbindelse, relation.<br><br><b>Exempel (Förbindelse):</b> De har en mycket god <b>förbindelse/relation</b> sig emellan.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> คำนาม (มักเป็นพหูพจน์) หมายถึงความสัมพันธ์หรือความเชื่อมโยงระหว่างสิ่งของหรือบุคคล<br><br><b>คำพ้องความหมาย:</b> การเชื่อมโยง, ความสัมพันธ์<br><br><b>ตัวอย่าง (ความสัมพันธ์):</b> พวกเขามี<b>ความสัมพันธ์ (ความเชื่อมโยง)</b> ที่ดีต่อกันมาก",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Іменник (зазвичай у множині), що означає стосунки або зв'язок між речами або людьми.<br><br><b>Синонім:</b> зв'язок, стосунки.<br><br><b>Приклад (Зв'язок):</b> У них дуже хороший <b>зв'язок (стосунки)</b> між собою.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Một danh từ (thường ở số nhiều) có nghĩa là mối quan hệ hoặc sự kết nối giữa các sự vật hoặc con người.<br><br><b>Từ đồng nghĩa:</b> sự kết nối, mối quan hệ.<br><br><b>Ví dụ (Sự kết nối):</b> Họ có một <b>sự kết nối (mối quan hệ)</b> rất tốt với nhau.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Ein Nomen (meist im Plural), das eine Beziehung oder Verbindung zwischen Dingen oder Personen bedeutet.<br><br><b>Synonym:</b> Verbindung, Beziehung.<br><br><b>Beispiel (Verbindung):</b> Sie haben eine sehr gute <b>Verbindung (Beziehung)</b> zueinander."
+        }
+    },
+    { 
+        text: "svið", 
+        is_exp: "<b>Útskýring:</b> <i>Nafnorð (hvorugkyn).</i> Getur þýtt svæði eða fag (t.d. fræðasvið). Það er líka notað yfir leiksvið þar sem leikarar sýna leikrit. (Bókstafur: s = substantiv/nafnorð).<br><br><b>Samheiti:</b> vettvangur, svæði, leiksvið.<br><br><b>1. Merking (Fag/Vettvangur):</b> Hann vinnur á þessu <b>sviði</b>.<br><b>2. Merking (Leiksvið):</b> Leikarinn stóð einn á <b>sviðinu</b>.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> اسم. يعني إما مجال تخصص/منطقة، أو خشبة المسرح للممثلين.<br><br><b>مرادف:</b> مجال، مسرح، منطقة.<br><br><b>1. المعنى (مجال/تخصص):</b> يعمل في هذا <b>المجال</b>.<br><b>2. المعنى (خشبة المسرح):</b> وقف الممثل وحيداً على <b>المسرح</b>.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Navneord. Kan betyde et område/fag, eller en teaterscene.<br><br><b>Synonym:</b> område, fag, scene.<br><br><b>1. Betydning (Fag/Område):</b> Han arbejder inden for dette <b>område (felt)</b>.<br><b>2. Betydning (Scene):</b> Skuespilleren stod alene på <b>scenen</b>.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> A noun. Can mean a field/area of expertise, or a stage where actors perform.<br><br><b>Synonym:</b> field, area, stage.<br><br><b>1. Meaning (Field/Area):</b> He works in this <b>field</b>.<br><b>2. Meaning (Stage):</b> The actor stood alone on the <b>stage</b>.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Pangngalan. Maaaring mangahulugang larangan/lugar, o entablado para sa mga aktor.<br><br><b>Kasingkahulugan:</b> larangan, lugar, entablado.<br><br><b>1. Kahulugan (Larangan):</b> Nagtatrabaho siya sa <b>larangang</b> ito.<br><b>2. Kahulugan (Entablado):</b> Mag-isang nakatayo ang aktor sa <b>entablado</b>.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Nom. Peut signifier un domaine/champ d'expertise, ou une scène (de théâtre).<br><br><b>Synonyme:</b> domaine, champ, scène.<br><br><b>1. Sens (Domaine/Secteur):</b> Il travaille dans ce <b>domaine</b>.<br><b>2. Sens (Scène):</b> L'acteur se tenait seul sur la <b>scène</b>.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 名词。可以指专业领域/范围，或者演员表演的舞台。<br><br><b>同义词：</b> 领域，区域，舞台。<br><br><b>1. 含义 (领域):</b> 他在这个<b>领域</b>工作。<br><b>2. 含义 (舞台):</b> 演员独自站在<b>舞台</b>上。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Lietvārds. Var nozīmēt jomu/nozari vai skatuvi teātrī.<br><br><b>Sinonīms:</b> joma, nozare, skatuve.<br><br><b>1. Nozīme (Joma/Nozare):</b> Viņš strādā šajā <b>jomā</b>.<br><b>2. Nozīme (Skatuve):</b> Aktieris viens pats stāvēja uz <b>skatuves</b>.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Daiktavardis. Gali reikšti sritį/specialybę arba sceną (teatre).<br><br><b>Sinonimas:</b> sritis, scena.<br><br><b>1. Reikšmė (Sritis/Sektorius):</b> Jis dirba šioje <b>srityje</b>.<br><b>2. Reikšmė (Scena):</b> Aktorius vienas stovėjo <b>scenoje</b>.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Substantiv. Kan bety et felt/område (f.eks. fagfelt), eller en teaterscene.<br><br><b>Synonym:</b> felt, område, scene.<br><br><b>1. Betydning (Felt/Fagområde):</b> Han jobber på dette <b>feltet</b>.<br><b>2. Betydning (Scene):</b> Skuespilleren sto alene på <b>scenen</b>.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> اسم. می‌تواند به معنی زمینه/حوزه تخصص، یا صحنه تئاتر باشد.<br><br><b>مترادف:</b> زمینه، حوزه، صحنه.<br><br><b>1. معنی (حوزه/زمینه):</b> او در این <b>حوزه (زمینه)</b> کار می‌کند.<br><b>2. معنی (صحنه):</b> بازیگر تنها روی <b>صحنه</b> ایستاده بود.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Substantivo. Pode significar um campo/área de especialização, ou um palco de teatro.<br><br><b>Sinônimo:</b> campo, área, palco.<br><br><b>1. Significado (Campo/Área):</b> Ele trabalha neste <b>campo</b>.<br><b>2. Significado (Palco):</b> O ator ficou sozinho no <b>palco</b>.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Rzeczownik. Może oznaczać dziedzinę/obszar specjalizacji, albo scenę teatralną.<br><br><b>Synonim:</b> dziedzina, obszar, scena.<br><br><b>1. Znaczenie (Dziedzina):</b> Pracuje w tej <b>dziedzinie</b>.<br><b>2. Znaczenie (Scena):</b> Aktor stał sam na <b>scenie</b>.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Substantiv. Poate însemna un domeniu/arie de expertiză, sau o scenă pentru actori.<br><br><b>Sinonim:</b> domeniu, arie, scenă.<br><br><b>1. Sens (Domeniu):</b> El lucrează în acest <b>domeniu</b>.<br><b>2. Sens (Scenă):</b> Actorul a stat singur pe <b>scenă</b>.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Существительное. Может означать сферу/область знаний, или театральную сцену.<br><br><b>Синоним:</b> область, сфера, сцена.<br><br><b>1. Значение (Сфера/Область):</b> Он работает в этой <b>сфере</b>.<br><b>2. Значение (Сцена):</b> Актер стоял один на <b>сцене</b>.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Sustantivo. Puede significar un campo/área de especialización, o un escenario teatral.<br><br><b>Sinónimo:</b> campo, área, escenario.<br><br><b>1. Significado (Campo/Área):</b> Él trabaja en este <b>campo</b>.<br><b>2. Significado (Escenario):</b> El actor estaba solo en el <b>escenario</b>.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Substantiv. Kan betyda ett område/fack, eller en teaterscen.<br><br><b>Synonym:</b> område, fält, scen.<br><br><b>1. Betydelse (Område/Fält):</b> Han arbetar inom det här <b>området</b>.<br><b>2. Betydelse (Scen):</b> Skådespelaren stod ensam på <b>scenen</b>.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> คำนาม อาจหมายถึงสาขา/ขอบเขตความเชี่ยวชาญ หรือเวทีที่นักแสดงใช้แสดง<br><br><b>คำพ้องความหมาย:</b> สาขา, พื้นที่, เวที<br><br><b>1. ความหมาย (สาขา/ขอบเขต):</b> เขาทำงานใน<b>สาขา</b>นี้<br><b>2. ความหมาย (เวที):</b> นักแสดงยืนอยู่บน<b>เวที</b>เพียงลำพัง",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Іменник. Може означати сферу/галузь знань, або театральну сцену.<br><br><b>Синонім:</b> сфера, галузь, сцена.<br><br><b>1. Значення (Сфера/Галузь):</b> Він працює в цій <b>сфері</b>.<br><b>2. Значення (Сцена):</b> Актор стояв один на <b>сцені</b>.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Danh từ. Có thể là một lĩnh vực/phạm vi chuyên môn, hoặc sân khấu cho diễn viên.<br><br><b>Từ đồng nghĩa:</b> lĩnh vực, phạm vi, sân khấu.<br><br><b>1. Nghĩa (Lĩnh vực):</b> Anh ấy làm việc trong <b>lĩnh vực</b> này.<br><b>2. Nghĩa (Sân khấu):</b> Nam diễn viên đứng một mình trên <b>sân khấu</b>.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Ein Nomen. Kann ein Fachgebiet/Bereich bedeuten, oder eine Bühne.<br><br><b>Synonym:</b> Bereich, Gebiet, Bühne.<br><br><b>1. Bedeutung (Bereich/Feld):</b> Er arbeitet in diesem <b>Bereich</b>.<br><b>2. Bedeutung (Bühne):</b> Der Schauspieler stand allein auf der <b>Bühne</b>."
+        }
+    },
+    { 
+        text: "mat", 
+        is_exp: "<b>Útskýring:</b> <i>Nafnorð (hvorugkyn/karlkyn).</i> Annars vegar dómur/umsögn um eitthvað (t.d. námsmat). Hins vegar er það þolfall af orðinu 'matur' (fæða). (Bókstafur: a).<br><br><b>Samheiti:</b> (1) dómur, einkunn, (2) fæða.<br><br><b>1. Merking (Dómur/Einkunn, hk.):</b> Kennarinn gaf gott <b>mat</b> á verkefninu.<br><b>2. Merking (Fæða/Matur, kk.):</b> Ég ætla að elda góðan <b>mat</b> í kvöld.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> اسم. إما تقييم/حكم على شيء، أو طعام (في حالة المفعول به).<br><br><b>مرادف:</b> تقييم، طعام.<br><br><b>1. المعنى (تقييم/حكم):</b> أعطى المعلم <b>تقييماً</b> جيداً للمشروع.<br><b>2. المعنى (طعام):</b> سأطبخ <b>طعاماً</b> جيداً الليلة.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Navneord. Betyder enten en bedømmelse/evaluering, eller mad (føde).<br><br><b>Synonym:</b> vurdering, mad.<br><br><b>1. Betydning (Bedømmelse/Evaluering):</b> Læreren gav en god <b>bedømmelse</b> af opgaven.<br><b>2. Betydning (Mad):</b> Jeg vil lave god <b>mad</b> i aften.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> A noun. Either an evaluation/assessment of something, or food (accusative case of 'matur').<br><br><b>Synonym:</b> evaluation, assessment, food.<br><br><b>1. Meaning (Evaluation):</b> The teacher gave a good <b>evaluation</b> of the project.<br><b>2. Meaning (Food):</b> I am going to cook good <b>food</b> tonight.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Pangngalan. Alinman sa isang pagsusuri/ebalwasyon, o pagkain.<br><br><b>Kasingkahulugan:</b> pagsusuri, pagkain.<br><br><b>1. Kahulugan (Pagsusuri/Ebalwasyon):</b> Nagbigay ang guro ng magandang <b>pagsusuri</b> sa proyekto.<br><b>2. Kahulugan (Pagkain):</b> Magluluto ako ng masarap na <b>pagkain</b> ngayong gabi.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Nom. Soit une évaluation/jugement de quelque chose, soit de la nourriture.<br><br><b>Synonyme:</b> évaluation, nourriture.<br><br><b>1. Sens (Évaluation/Jugement):</b> Le professeur a donné une bonne <b>évaluation</b> du projet.<br><b>2. Sens (Nourriture):</b> Je vais cuisiner de la bonne <b>nourriture</b> ce soir.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 名词。要么是对某事的评估/评价，要么是指食物（matur 的宾格形式）。<br><br><b>同义词：</b> 评估，食物。<br><br><b>1. 含义 (评估/评价):</b> 老师对项目给出了很好的<b>评价（评估）</b>。<br><b>2. 含义 (食物):</b> 我今晚要做顿好吃的<b>饭（食物）</b>。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Lietvārds. Vai nu vērtējums/novērtējums, vai ēdiens.<br><br><b>Sinonīms:</b> vērtējums, ēdiens.<br><br><b>1. Nozīme (Vērtējums):</b> Skolotājs sniedza labu <b>vērtējumu</b> par projektu.<br><b>2. Nozīme (Ēdiens):</b> Šovakar gatavošu labu <b>ēdienu</b>.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Daiktavardis. Arba kažko įvertinimas, arba maistas.<br><br><b>Sinonimas:</b> įvertinimas, maistas.<br><br><b>1. Reikšmė (Įvertinimas):</b> Mokytojas gerai <b>įvertino</b> projektą.<br><b>2. Reikšmė (Maistas):</b> Šįvakar gaminsiu gerą <b>maistą</b>.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Substantiv. Enten en vurdering/evaluering, eller mat (føde).<br><br><b>Synonym:</b> vurdering, mat.<br><br><b>1. Betydning (Vurdering):</b> Læreren ga en god <b>vurdering</b> av prosjektet.<br><b>2. Betydning (Mat):</b> Jeg skal lage god <b>mat</b> i kveld.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> اسم. یا ارزیابی/قضاوت در مورد چیزی است، یا غذا.<br><br><b>مترادف:</b> ارزیابی، غذا.<br><br><b>1. معنی (ارزیابی):</b> معلم <b>ارزیابی</b> خوبی از پروژه ارائه داد.<br><b>2. معنی (غذا):</b> امشب می‌خواهم <b>غذای</b> خوبی بپزم.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Substantivo. Pode ser uma avaliação/julgamento de algo, ou comida.<br><br><b>Sinônimo:</b> avaliação, comida.<br><br><b>1. Significado (Avaliação):</b> O professor deu uma boa <b>avaliação</b> do projeto.<br><b>2. Significado (Comida):</b> Vou cozinhar uma boa <b>comida</b> esta noite.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Rzeczownik. Oznacza ocenę/ewaluację czegoś, albo jedzenie.<br><br><b>Synonim:</b> ocena, jedzenie.<br><br><b>1. Znaczenie (Ocena):</b> Nauczyciel wystawił projektowi dobrą <b>ocenę</b>.<br><b>2. Znaczenie (Jedzenie):</b> Ugotuję dziś dobre <b>jedzenie</b>.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Substantiv. Fie o evaluare/apreciere a ceva, fie mâncare.<br><br><b>Sinonim:</b> evaluare, mâncare.<br><br><b>1. Sens (Evaluare):</b> Profesorul a dat o <b>evaluare</b> bună proiectului.<br><b>2. Sens (Mâncare):</b> Voi găti <b>mâncare</b> bună diseară.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Существительное. Либо оценка/суждение о чем-либо, либо еда.<br><br><b>Синоним:</b> оценка, еда.<br><br><b>1. Значение (Оценка):</b> Учитель дал хорошую <b>оценку</b> проекту.<br><b>2. Значение (Еда):</b> Я собираюсь приготовить хорошую <b>еду</b> сегодня вечером.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Sustantivo. Puede ser una evaluación/juicio de algo, o comida.<br><br><b>Sinónimo:</b> evaluación, comida.<br><br><b>1. Significado (Evaluación):</b> El profesor dio una buena <b>evaluación</b> del proyecto.<br><b>2. Significado (Comida):</b> Voy a cocinar buena <b>comida</b> esta noche.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Substantiv. Antingen en bedömning/utvärdering, eller mat.<br><br><b>Synonym:</b> bedömning, mat.<br><br><b>1. Betydelse (Bedömning):</b> Läraren gav en bra <b>bedömning</b> av projektet.<br><b>2. Betydelse (Mat):</b> Jag ska laga god <b>mat</b> ikväll.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> คำนาม หมายถึงการประเมิน/การตัดสิน หรืออาหาร<br><br><b>คำพ้องความหมาย:</b> การประเมิน, อาหาร<br><br><b>1. ความหมาย (การประเมิน):</b> ครูให้<b>การประเมิน</b>โครงการที่ดีมาก<br><b>2. ความหมาย (อาหาร):</b> ฉันจะทำ<b>อาหาร</b>อร่อยๆ ในคืนนี้",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Іменник. Або оцінка/судження про щось, або їжа.<br><br><b>Синонім:</b> оцінка, їжа.<br><br><b>1. Значення (Оцінка):</b> Вчитель дав хорошу <b>оцінку</b> проекту.<br><b>2. Значення (Їжа):</b> Я збираюся приготувати гарну <b>їжу</b> сьогодні ввечері.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Danh từ. Hoặc là sự đánh giá về một cái gì đó, hoặc là thức ăn.<br><br><b>Từ đồng nghĩa:</b> đánh giá, thức ăn.<br><br><b>1. Nghĩa (Đánh giá):</b> Giáo viên đã đưa ra một <b>đánh giá</b> tốt về dự án.<br><b>2. Nghĩa (Thức ăn):</b> Tối nay tôi sẽ nấu một <b>bữa ăn (thức ăn)</b> ngon.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Ein Nomen. Entweder eine Bewertung/Beurteilung von etwas oder Essen.<br><br><b>Synonym:</b> Bewertung, Essen.<br><br><b>1. Bedeutung (Bewertung):</b> Der Lehrer gab eine gute <b>Bewertung</b> des Projekts ab.<br><b>2. Bedeutung (Essen):</b> Ich werde heute Abend gutes <b>Essen</b> kochen."
+        }
+    },
+    { 
+        text: "tillaga", 
+        is_exp: "<b>Útskýring:</b> <i>Nafnorð (kvenkyn).</i> Uppástunga eða hugmynd að lausn sem lögð er fram til að ræða. (Bókstafur: s = substantiv/nafnorð).<br><br><b>Samheiti:</b> uppástunga, hugmynd.<br><br><b>Dæmi:</b> Ég er með góða <b>tillögu</b> að verkefni.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> اسم (مؤنث). اقتراح أو فكرة للحل تطرح للمناقشة.<br><br><b>مرادف:</b> اقتراح، فكرة.<br><br><b>مثال (اقتراح):</b> لدي <b>اقتراح</b> جيد للمشروع.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Navneord (hunkøn). Et forslag eller en idé, der fremsættes til diskussion.<br><br><b>Synonym:</b> forslag, idé.<br><br><b>Eksempel (Forslag):</b> Jeg har et godt <b>forslag</b> til et projekt.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> A noun (feminine) for a suggestion or proposed idea put forward for discussion.<br><br><b>Synonym:</b> suggestion, proposal.<br><br><b>Example (Proposal):</b> I have a good <b>proposal (suggestion)</b> for a project.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Pangngalan. Isang mungkahi o panukala na inilatag para pag-usapan.<br><br><b>Kasingkahulugan:</b> panukala, mungkahi.<br><br><b>Halimbawa (Mungkahi):</b> Mayroon akong magandang <b>mungkahi</b> para sa isang proyekto.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Nom (féminin). Une suggestion ou une idée proposée pour être discutée.<br><br><b>Synonyme:</b> proposition, suggestion.<br><br><b>Exemple (Proposition):</b> J'ai une bonne <b>proposition (suggestion)</b> pour un projet.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 名词。指提出供讨论的建议或提议。<br><br><b>同义词：</b> 建议，提议。<br><br><b>例句 (建议):</b> 我对项目有一个好<b>建议</b>。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Lietvārds. Ierosinājums vai ideja, kas iesniegta apspriešanai.<br><br><b>Sinonīms:</b> priekšlikums, ieteikums.<br><br><b>Piemērs (Priekšlikums):</b> Man ir labs <b>priekšlikums</b> projektam.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Daiktavardis. Pasiūlymas ar idėja, pateikta svarstyti.<br><br><b>Sinonimas:</b> pasiūlymas, patarimas.<br><br><b>Pavyzdys (Pasiūlymas):</b> Turiu gerą <b>pasiūlymą</b> projektui.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Substantiv (hunkjønn). Et forslag eller en idé lagt frem til diskusjon.<br><br><b>Synonym:</b> forslag, idé.<br><br><b>Eksempel (Forslag):</b> Jeg har et godt <b>forslag</b> til et prosjekt.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> اسم (مونث). پیشنهاد یا ایده‌ای که برای بحث مطرح می‌شود.<br><br><b>مترادف:</b> پیشنهاد، توصیه.<br><br><b>مثال (پیشنهاد):</b> من یک <b>پیشنهاد</b> خوب برای یک پروژه دارم.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Substantivo (feminino). Uma sugestão ou proposta apresentada para discussão.<br><br><b>Sinônimo:</b> proposta, sugestão.<br><br><b>Exemplo (Proposta):</b> Tenho uma boa <b>proposta (sugestão)</b> para um projeto.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Rzeczownik. Sugestia lub propozycja przedstawiona do dyskusji.<br><br><b>Synonim:</b> propozycja, sugestia.<br><br><b>Przykład (Propozycja):</b> Mam dobrą <b>propozycję</b> projektu.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Substantiv. O sugestie sau o idee propusă pentru discuție.<br><br><b>Sinonim:</b> propunere, sugestie.<br><br><b>Exemplu (Propunere):</b> Am o <b>propunere</b> bună pentru un proiect.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Существительное. Предложение или идея, выдвинутая для обсуждения.<br><br><b>Синоним:</b> предложение, идея.<br><br><b>Пример (Предложение):</b> У меня есть хорошее <b>предложение</b> для проекта.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Sustantivo (femenino). Una sugerencia o idea propuesta para discutir.<br><br><b>Sinónimo:</b> propuesta, sugerencia.<br><br><b>Ejemplo (Propuesta):</b> Tengo una buena <b>propuesta (sugerencia)</b> para un proyecto.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Substantiv (femininum). Ett förslag eller en idé som läggs fram för diskussion.<br><br><b>Synonym:</b> förslag, idé.<br><br><b>Exempel (Förslag):</b> Jag har ett bra <b>förslag</b> till ett projekt.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> คำนาม หมายถึงข้อเสนอหรือแนวคิดที่เสนอให้พิจารณา<br><br><b>คำพ้องความหมาย:</b> ข้อเสนอ, คำแนะนำ<br><br><b>ตัวอย่าง (ข้อเสนอ):</b> ฉันมี<b>ข้อเสนอ</b>ที่ดีสำหรับโปรเจกต์",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Іменник. Пропозиція або ідея, висунута для обговорення.<br><br><b>Синонім:</b> пропозиція, ідея.<br><br><b>Приклад (Пропозиція):</b> У мене є хороша <b>пропозиція</b> для проекту.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Danh từ. Một đề xuất hoặc ý tưởng được đưa ra để thảo luận.<br><br><b>Từ đồng nghĩa:</b> đề xuất, gợi ý.<br><br><b>Ví dụ (Đề xuất):</b> Tôi có một <b>đề xuất</b> hay cho dự án.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Ein Nomen. Ein Vorschlag oder eine Idee, die zur Diskussion gestellt wird.<br><br><b>Synonym:</b> Vorschlag, Anregung.<br><br><b>Beispiel (Vorschlag):</b> Ich habe einen guten <b>Vorschlag</b> für ein Projekt."
+        }
+    },
+    { 
+        text: "hefja", 
+        is_exp: "<b>Útskýring:</b> <i>Sagnorð.</i> Að byrja eða hefjast handa við eitthvað. Það getur líka þýtt að lyfta einhverju upp (hefja upp). (Bókstafur: n).<br><br><b>Samheiti:</b> byrja, lyfta.<br><br><b>1. Merking (Að byrja):</b> Við ætlum að <b>hefja</b> leikinn núna.<br><b>2. Merking (Að lyfta):</b> Hann þurfti að <b>hefja</b> kassann upp.",
+        translations: {
+            "ar": "<div dir='rtl' style='text-align: right;'><b>Arabíska (العربية):</b><br><br><b>الشرح:</b> فعل يعني البدء بشيء ما. ويمكن أن يعني أيضاً رفع شيء لأعلى.<br><br><b>مرادف:</b> يبدأ، يرفع.<br><br><b>1. المعنى (يبدأ):</b> سنقوم بـ <b>بدء</b> المباراة الآن.<br><b>2. المعنى (يرفع):</b> كان عليه أن <b>يرفع</b> الصندوق.</div>",
+            "da": "<b>Danska (Dansk):</b><br><br><b>Forklaring:</b> Udsagnsord. At begynde på noget. Kan også betyde at løfte noget op.<br><br><b>Synonym:</b> begynde, starte, løfte.<br><br><b>1. Betydning (Begynde):</b> Vi skal <b>begynde (starte)</b> kampen nu.<br><b>2. Betydning (Løfte):</b> Han var nødt til at <b>løfte</b> kassen op.",
+            "en": "<b>Enska (English):</b><br><br><b>Explanation:</b> A verb meaning to begin or start something. It can also mean to lift something up.<br><br><b>Synonym:</b> begin, start, lift.<br><br><b>1. Meaning (To begin):</b> We are going to <b>begin (start)</b> the game now.<br><b>2. Meaning (To lift):</b> He had to <b>lift</b> the box up.",
+            "tl": "<b>Filippseyska (Tagalog):</b><br><br><b>Paliwanag:</b> Pandiwa na nangangahulugang magsimula. Maaari rin itong mangahulugang buhatin ang isang bagay.<br><br><b>Kasingkahulugan:</b> magsimula, buhatin, iangat.<br><br><b>1. Kahulugan (Magsimula):</b> <b>Sisimulan</b> na natin ang laro ngayon.<br><b>2. Kahulugan (Buhatin):</b> Kinailangan niyang <b>buhatin (iangat)</b> ang kahon.",
+            "fr": "<b>Franska (Français):</b><br><br><b>Explication:</b> Verbe signifiant commencer quelque chose. Peut aussi signifier soulever ou lever.<br><br><b>Synonyme:</b> commencer, débuter, soulever.<br><br><b>1. Sens (Commencer):</b> Nous allons <b>commencer</b> le jeu maintenant.<br><b>2. Sens (Soulever):</b> Il a dû <b>soulever</b> la boîte.",
+            "zh": "<b>Kínverska (中文):</b><br><br><b>解释：</b> 动词，意思是开始某事。也可以指把某物举起/抬起。<br><br><b>同义词：</b> 开始，举起。<br><br><b>1. 含义 (开始):</b> 我们现在就要<b>开始</b>比赛了。<br><b>2. 含义 (举起):</b> 他必须把箱子<b>举起</b>来。",
+            "lv": "<b>Lettneska (Latviešu):</b><br><br><b>Paskaidrojums:</b> Darbības vārds, kas nozīmē sākt kaut ko. Tas var nozīmēt arī pacelt.<br><br><b>Sinonīms:</b> sākt, uzsākt, pacelt.<br><br><b>1. Nozīme (Sākt):</b> Mēs <b>sāksim</b> spēli tagad.<br><b>2. Nozīme (Pacelt):</b> Viņam vajadzēja <b>pacelt</b> kasti.",
+            "lt": "<b>Litháíska (Lietuvių):</b><br><br><b>Paaiškinimas:</b> Veiksmažodis, reiškiantis kažką pradėti. Tai taip pat gali reikšti pakelti.<br><br><b>Sinonimas:</b> pradėti, pakelti.<br><br><b>1. Reikšmė (Pradėti):</b> Mes <b>pradėsime</b> žaidimą dabar.<br><b>2. Reikšmė (Pakelti):</b> Jam reikėjo <b>pakelti</b> dėžę.",
+            "no": "<b>Norska (Norsk):</b><br><br><b>Forklaring:</b> Verb. Å begynne på noe. Kan også bety å løfte noe opp.<br><br><b>Synonym:</b> begynne, starte, løfte.<br><br><b>1. Betydning (Å begynne):</b> Vi skal <b>begynne</b> kampen nå.<br><b>2. Betydning (Å løfte):</b> Han måtte <b>løfte</b> boksen opp.",
+            "fa": "<div dir='rtl' style='text-align: right;'><b>Persneska (فارسی):</b><br><br><b>توضیح:</b> فعلی به معنی شروع کردن. همچنین می‌تواند به معنی بلند کردن چیزی باشد.<br><br><b>مترادف:</b> شروع کردن، آغاز کردن، بلند کردن.<br><br><b>1. معنی (شروع کردن):</b> ما می‌خواهیم بازی را الان <b>شروع کنیم</b>.<br><b>2. معنی (بلند کردن):</b> او مجبور شد جعبه را <b>بلند کند</b>.</div>",
+            "pt": "<b>Portúgalska (Português):</b><br><br><b>Explicação:</b> Verbo que significa começar ou iniciar algo. Também pode significar levantar algo.<br><br><b>Sinônimo:</b> começar, iniciar, levantar.<br><br><b>1. Significado (Começar):</b> Vamos <b>começar</b> o jogo agora.<br><b>2. Significado (Levantar):</b> Ele teve que <b>levantar</b> a caixa.",
+            "pl": "<b>Pólska (Polski):</b><br><br><b>Wyjaśnienie:</b> Czasownik oznaczający zacząć coś. Może też oznaczać podnieść coś.<br><br><b>Synonim:</b> zacząć, rozpocząć, podnieść.<br><br><b>1. Znaczenie (Zacząć):</b> Zamierzamy teraz <b>zacząć</b> grę.<br><b>2. Znaczenie (Podnieść):</b> Musiał <b>podnieść</b> pudełko.",
+            "ro": "<b>Rúmenska (Română):</b><br><br><b>Explicație:</b> Verb care înseamnă a începe ceva. Poate însemna și a ridica ceva.<br><br><b>Sinonim:</b> a începe, a ridica.<br><br><b>1. Sens (A începe):</b> Vom <b>începe</b> jocul acum.<br><b>2. Sens (A ridica):</b> A trebuit să <b>ridice</b> cutia.",
+            "ru": "<b>Rússneska (Русский):</b><br><br><b>Объяснение:</b> Глагол, означающий начать что-либо. Также может означать поднять что-то.<br><br><b>Синоним:</b> начать, поднять.<br><br><b>1. Значение (Начать):</b> Мы собираемся <b>начать</b> игру сейчас.<br><b>2. Значение (Поднять):</b> Ему пришлось <b>поднять</b> коробку.",
+            "es": "<b>Spænska (Español):</b><br><br><b>Explicación:</b> Verbo que significa comenzar o empezar algo. También puede significar levantar algo.<br><br><b>Sinónimo:</b> comenzar, empezar, levantar.<br><br><b>1. Significado (Comenzar):</b> Vamos a <b>comenzar</b> el juego ahora.<br><b>2. Significado (Levantar):</b> Él tuvo que <b>levantar</b> la caja.",
+            "sv": "<b>Sænska (Svenska):</b><br><br><b>Förklaring:</b> Verb. Att börja eller starta något. Kan också betyda att lyfta upp något.<br><br><b>Synonym:</b> börja, starta, lyfta.<br><br><b>1. Betydelse (Börja):</b> Vi ska <b>börja</b> spelet nu.<br><b>2. Betydelse (Lyfta):</b> Han var tvungen att <b>lyfta</b> upp lådan.",
+            "th": "<b>Tælenska (ภาษาไทย):</b><br><br><b>คำอธิบาย:</b> คำกริยาหมายถึงเริ่มต้นทำบางสิ่ง นอกจากนี้ยังหมายถึงการยกบางสิ่งขึ้นได้ด้วย<br><br><b>คำพ้องความหมาย:</b> เริ่มต้น, ยกขึ้น<br><br><b>1. ความหมาย (เริ่มต้น):</b> เรากำลังจะ<b>เริ่ม</b>เกมเดี๋ยวนี้<br><b>2. ความหมาย (ยกขึ้น):</b> เขาต้อง<b>ยก</b>กล่องขึ้น",
+            "uk": "<b>Úkraínska (Українська):</b><br><br><b>Пояснення:</b> Дієслово, що означає почати щось. Також може означати підняти щось.<br><br><b>Синонім:</b> почати, підняти.<br><br><b>1. Значення (Почати):</b> Ми збираємося <b>почати</b> гру зараз.<br><b>2. Значення (Підняти):</b> Йому довелося <b>підняти</b> коробку.",
+            "vi": "<b>Víetnamska (Tiếng Việt):</b><br><br><b>Giải thích:</b> Một động từ có nghĩa là bắt đầu làm gì đó. Nó cũng có thể có nghĩa là nâng cái gì đó lên.<br><br><b>Từ đồng nghĩa:</b> bắt đầu, nâng lên.<br><br><b>1. Nghĩa (Bắt đầu):</b> Chúng ta sẽ <b>bắt đầu</b> trò chơi ngay bây giờ.<br><b>2. Nghĩa (Nâng lên):</b> Anh ấy phải <b>nâng</b> cái hộp lên.",
+            "de": "<b>Þýska (Deutsch):</b><br><br><b>Erklärung:</b> Ein Verb, das beginnen oder anfangen bedeutet. Es kann auch bedeuten, etwas hochzuheben.<br><br><b>Synonym:</b> beginnen, anfangen, anheben.<br><br><b>1. Bedeutung (Beginnen):</b> Wir werden das Spiel jetzt <b>beginnen</b>.<br><b>2. Bedeutung (Anheben):</b> Er musste die Kiste <b>anheben</b>."
+        }
+    }
+];
+
+let userScores = new Array(exerciseData.length).fill(null);
+let userSpoken = new Array(exerciseData.length).fill("");
+
+let currentIndex = 0;
+let recognition;
+let isRecording = false;
+let autoAdvanceTimer = null;
+let hasDownloadedCert = false; 
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'is-IS';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    recognition.onend = () => {
+        isRecording = false;
+        const btn = document.getElementById('record-btn');
+        if (btn) {
+            btn.innerText = "🎤 Tala";
+            btn.classList.remove('recording');
+        }
+        
+        const resDiv = document.getElementById('result');
+        if (resDiv && resDiv.innerText === "Hlusta...") {
+            resDiv.innerText = "";
+        }
+    };
+} else {
+    alert("Þessi vafri styður ekki talgreiningu. Notaðu Chrome eða Edge á tölvu.");
+}
+
+window.onload = () => { 
+    updateUI(); 
+};
+
+function updateProgress() {
+    let correctCount = 0;
+    for (let i = 0; i < userScores.length; i++) {
+        if (userScores[i] === 100) {
+            correctCount++;
+        }
+    }
+    const percent = (correctCount / exerciseData.length) * 100;
+    
+    const progressBar = document.getElementById('progress-bar');
+    if(progressBar) {
+        progressBar.style.width = percent + '%';
+    }
+    return correctCount;
+}
+
+function findNextUnfinished() {
+    for (let i = 0; i < userScores.length; i++) {
+        if (userScores[i] !== 100) {
+            currentIndex = i;
+            break;
+        }
+    }
+    
+    document.getElementById('app').innerHTML = `
+        <h1>Námsorð: 21 - 30 algengustu.</h1>
+        <div class="progress-container"><div id="progress-bar"></div></div>
+        
+        <div class="lang-selector">
+            <label for="languageSelect"><b>🌍 Veldu tungumál:</b></label>
+            <select id="languageSelect" onchange="updateUI()">
+                <option value="ar">Arabíska – العربية</option>
+                <option value="da">Danska – Dansk</option>
+                <option value="en" selected>Enska – English</option>
+                <option value="tl">Filippseyska – Tagalog / Filipino</option>
+                <option value="fr">Franska – Français</option>
+                <option value="zh">Kínverska – 中文</option>
+                <option value="lv">Lettneska – Latviešu</option>
+                <option value="lt">Litháíska – Lietuvių</option>
+                <option value="no">Norska – Norsk</option>
+                <option value="fa">Persneska – فارسی</option>
+                <option value="pt">Portúgalska – Português</option>
+                <option value="pl">Pólska – Polski</option>
+                <option value="ro">Rúmenska – Română</option>
+                <option value="ru">Rússneska – Русский</option>
+                <option value="es">Spænska – Español</option>
+                <option value="sv">Sænska – Svenska</option>
+                <option value="th">Tælenska – ภาษาไทย</option>
+                <option value="uk">Úkraínska – Українська</option>
+                <option value="vi">Víetnamska – Tiếng Việt</option>
+                <option value="de">Þýska – Deutsch</option>
+            </select>
+        </div>
+
+        <div id="counter"></div>
+        <div id="target"></div>
+        <div id="is-explanation"></div>
+        <br>
+        <button id="record-btn" class="btn" onclick="toggleRecord()">🎤 Tala</button>
+        <div id="spoken"></div>
+        <div id="result"></div>
+        <div id="media-box"></div>
+        <div class="nav-btns">
+            <button class="btn" style="background-color: #5f6368;" onclick="prevExercise()">⬅️ Fyrri</button>
+            <button class="btn" style="background-color: #5f6368;" onclick="nextExercise()">Næsta ➡️</button>
+        </div>
+        <div class="feedback-note">
+            Vinsamlegast sendið ábendingar á <a href="mailto:dgu@fb.is">dgu@fb.is</a>
+        </div>
+    `;
+    updateUI();
+}
+
+function updateUI() {
+    clearTimeout(autoAdvanceTimer); 
+    const correctCount = updateProgress();
+
+    if (currentIndex >= exerciseData.length) {
+        if (correctCount === exerciseData.length) {
+            document.getElementById('app').innerHTML = `
+                <div class="progress-container"><div id="progress-bar" style="width: 100%;"></div></div>
+                <h1 style="color: #34a853; font-size: 2.5em;">Frábært! Þú náðir 100% árangri! 🎉</h1>
+                <p style="font-size: 1.2em; color: #555;">Skrifaðu nafnið þitt hér að neðan til að sækja viðurkenningarskjalið þitt.</p>
+                <input type="text" id="studentName" placeholder="Skrifaðu nafnið þitt hér" autocomplete="off" ${hasDownloadedCert ? 'disabled' : ''}><br>
+                <button id="cert-btn" class="btn" style="background-color: ${hasDownloadedCert ? '#5f6368' : '#1a73e8'}; font-size: 1.5em; padding: 15px 30px; margin-top: 10px; cursor: ${hasDownloadedCert ? 'not-allowed' : 'pointer'}; opacity: ${hasDownloadedCert ? '0.7' : '1'};" onclick="downloadCert()" ${hasDownloadedCert ? 'disabled' : ''}>
+                    ${hasDownloadedCert ? '✅ Skjal sótt' : '🏆 Sækja viðurkenningarskjal'}
+                </button>
+                <br><br>
+                <button class="btn" style="background-color: #5f6368;" onclick="location.reload()">🔄 Byrja nýja umferð</button>
+                <div class="feedback-note">
+                    Vinsamlegast sendið ábendingar á <a href="mailto:dgu@fb.is">dgu@fb.is</a>
+                </div>
+            `;
+        } else {
+            document.getElementById('app').innerHTML = `
+                <div class="progress-container"><div id="progress-bar" style="width: ${(correctCount/exerciseData.length)*100}%;"></div></div>
+                <h1 style="color: #fbbc05; font-size: 2em;">Þú ert næstum því búin(n)!</h1>
+                <p style="font-size: 1.2em;">Þú hefur klárað ${correctCount} af ${exerciseData.length} orðum með 100% árangri.</p>
+                <p style="font-size: 1.1em; color: #555;">Farðu til baka og reyndu aftur við þau orð sem vantaði upp á til að fá skjalið.</p>
+                <button class="btn" style="background-color: #fbbc05; color: #000;" onclick="findNextUnfinished()">➡️ Fara á orð sem vantar</button>
+                <div class="feedback-note">
+                    Vinsamlegast sendið ábendingar á <a href="mailto:dgu@fb.is">dgu@fb.is</a>
+                </div>
+            `;
+        }
+        return;
+    }
+
+    const curr = exerciseData[currentIndex];
+    
+    const langSelect = document.getElementById('languageSelect');
+    const selectedLang = langSelect ? langSelect.value : 'en';
+
+    document.getElementById('target').innerHTML = curr.text;
+    document.getElementById('is-explanation').innerHTML = curr.is_exp;
+    document.getElementById('counter').innerText = `Orð ${currentIndex + 1} af ${exerciseData.length}`;
+    
+    document.getElementById('media-box').innerHTML = curr.translations[selectedLang] || "Þýðing ekki til / Translation missing";
+
+    const savedScore = userScores[currentIndex];
+    const savedText = userSpoken[currentIndex];
+
+    if (savedScore !== null) {
+        document.getElementById('result').innerText = `Einkunn: ${savedScore}%`;
+        document.getElementById('spoken').innerText = `Þú sagðir: "${savedText}"`;
+    } else {
+        document.getElementById('result').innerText = "";
+        document.getElementById('spoken').innerText = "";
+    }
+}
+
+function nextExercise() {
+    currentIndex++;
+    updateUI();
+}
+
+function prevExercise() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        updateUI();
+    }
+}
+
+function toggleRecord() {
+    if (!recognition) return;
+
+    const btn = document.getElementById('record-btn');
+    if (isRecording) {
+        recognition.stop();
+    } else {
+        try {
+            recognition.start();
+            isRecording = true;
+            btn.innerText = "🛑 Hlusta...";
+            btn.classList.add('recording');
+            document.getElementById('result').innerText = "Hlusta...";
+            document.getElementById('spoken').innerText = "";
+        } catch(e) {
+            console.log("Villa í upptöku: " + e);
+        }
+    }
+}
+
+if (recognition) {
+    recognition.onresult = (event) => {
+        let spoken = event.results[0][0].transcript;
+        spoken = spoken.trim().toLowerCase(); 
+
+        document.getElementById('spoken').innerText = `Þú sagðir: "${spoken}"`;
+        
+        const targetWord = exerciseData[currentIndex].text.toLowerCase();
+        
+        let score = (spoken === targetWord) ? 100 : 0;
+        
+        if (spoken.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g,"").trim() === targetWord) {
+            score = 100;
+        }
+        
+        document.getElementById('result').innerText = `Einkunn: ${score}%`;
+
+        userScores[currentIndex] = score;
+        userSpoken[currentIndex] = spoken;
+        
+        updateProgress();
+
+        if (score === 100) {
+            autoAdvanceTimer = setTimeout(() => {
+                nextExercise();
+            }, 1000); 
+        }
+    };
+}
+
+function downloadCert() {
+    if (hasDownloadedCert) return; 
+
+    const studentNameInput = document.getElementById('studentName');
+    const studentName = studentNameInput ? studentNameInput.value.trim() : "";
+    
+    if (studentName === "") {
+        alert("Vinsamlegast skrifaðu nafnið þitt fyrst!");
+        return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 900;
+    canvas.height = 600;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.strokeStyle = '#1a73e8';
+    ctx.lineWidth = 15;
+    ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+    ctx.strokeStyle = '#fbbc05';
+    ctx.lineWidth = 5;
+    ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+    
+    ctx.fillStyle = '#1a73e8';
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 50px Arial';
+    ctx.fillText('Viðurkenning', canvas.width / 2, 140);
+    
+    ctx.fillStyle = '#333333';
+    ctx.font = '24px Arial';
+    ctx.fillText('Þetta skjal staðfestir að', canvas.width / 2, 220);
+    
+    ctx.fillStyle = '#000000';
+    ctx.font = 'bold 45px Arial';
+    ctx.fillText(studentName, canvas.width / 2, 290);
+    
+    ctx.fillStyle = '#333333';
+    ctx.font = '24px Arial';
+    ctx.fillText('hefur lokið æfingunni með glæsibrag:', canvas.width / 2, 360);
+
+    ctx.fillStyle = '#1a73e8';
+    ctx.font = 'bold 26px Arial';
+    ctx.fillText('Námsorð: 21 - 30 algengustu.', canvas.width / 2, 420);
+    
+    ctx.fillStyle = '#34a853';
+    ctx.font = 'italic 28px Arial';
+    ctx.fillText('Frábær árangur! Haltu áfram að æfa þig.', canvas.width / 2, 490);
+
+    const dateString = new Date().toLocaleDateString('is-IS');
+    ctx.fillStyle = '#666666';
+    ctx.font = '18px Arial';
+    ctx.fillText('Dagsetning: ' + dateString, canvas.width / 2, 540);
+    
+    const link = document.createElement('a');
+    link.download = `Vidurkenning_${studentName.replace(/\s+/g, '_')}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    
+    hasDownloadedCert = true;
+    const btn = document.getElementById('cert-btn');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "✅ Skjal sótt";
+        btn.style.backgroundColor = "#5f6368";
+        btn.style.cursor = "not-allowed";
+        btn.style.opacity = "0.7";
+    }
+    if (studentNameInput) {
+        studentNameInput.disabled = true;
+    }
+}
+</script>
+
+</body>
+</html>
